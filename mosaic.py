@@ -35,14 +35,14 @@ def main(filename):
     big = base.copy()
     bH, bW = base.shape[:2]                     # ベース画像のサイズ
 
-    mH, mW = 16, 16                             # モザイクのサイズ　前提として全画像共通なので
-    os.chdir("./imgs/")
-    file_list = glob.glob("*")
+    mH, mW = 96, 96                             # モザイクのサイズ　前提として全画像共通なので
+    #os.chdir("./imgs/")
+    file_list = glob.glob("./imgs/*")
 
     imgH, imgW = bH*mH, bW*mW
     canvas = np.full((imgH, imgW, 3), (255,255,255), np.uint8)
     big = cv2.resize(big, (bW*mW, bH*mH), interpolation=cv2.INTER_NEAREST)
-    cv2.imwrite("big_"+filename, big)
+    #cv2.imwrite("big_"+filename, big)
     cnt = 1
     for w in range(bW):
         for h in range(bH):
@@ -57,13 +57,8 @@ def main(filename):
 
             color2 = (calc_color(b1), calc_color(g1), calc_color(r1))
 
-            #img = cv2.imread(f"{cnt}.png", 1)
-            # img = cv2.imread(file)
             file = random.choice(file_list)
-            imgPIL = Image.open(file) 
-            img = np.array(imgPIL, dtype=np.uint8)
-            imgPIL.show()
-            
+            img = cv2.imread(file, 1)
             img = gray2color(img, color1, color2)
             canvas[mH*h:mH*(h+1), mW*w:mW*(w+1)] = img
             cnt += 1
@@ -74,5 +69,5 @@ def main(filename):
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    filename = "mona.jpg"
+    filename = "origin.png"
     main(filename)
